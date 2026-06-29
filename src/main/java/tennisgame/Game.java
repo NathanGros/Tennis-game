@@ -30,6 +30,19 @@ public class Game {
 		InitWindow(screenWidth, screenHeight, "Tennis game");
 	}
 
+	private void playerMovement(Player player, float dt) {
+		Vector2 movement = new Vector2().x(0.0f).y(0.0f);
+		if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+			movement.y(movement.y() + 1.0f);
+		if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+			movement.y(movement.y() + -1.0f);
+		if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+			movement.x(movement.x() + -1.0f);
+		if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+			movement.x(movement.x() + 1.0f);
+		player.move(movement, dt * player.getBaseSpeed());
+	}
+
 	public void startGame() {
 		launchWindow();
 
@@ -51,10 +64,7 @@ public class Game {
 		while (!WindowShouldClose()) {
 			// Update
 			float dt = GetFrameTime();
-			if (IsKeyDown(KEY_LEFT))
-				player.moveSideways(dt * player.getBaseSpeed());
-			if (IsKeyDown(KEY_RIGHT))
-				player.moveSideways(-1.0f * dt * player.getBaseSpeed());
+			playerMovement(player, dt);
 			ball.moveBall(dt * ball.getBaseSpeed());
 
 			// Players collisions

@@ -8,8 +8,10 @@ public class Player {
 	private Vector3 pos;
 	private float width;
 	private float height;
-	private static float posMax = 10.973f / 2.0f;
-	private static float posMin = -posMax;
+	private static float posXMax = 23.77f / 2.0f;
+	private static float posXMin = 0.0f;
+	private static float posZMax = 10.973f / 2.0f;
+	private static float posZMin = -posZMax;
 	private static float baseSpeed = 3.0f;
 
 	public Player() {
@@ -23,14 +25,22 @@ public class Player {
 		return baseSpeed;
 	}
 
-	public void moveSideways(float distance) {
-		pos.z(pos.z() + distance);
-		if (pos.z() < posMin) {
-			pos.z(posMin);
+	public void move(Vector2 movementVect, float distance) {
+		if (movementVect.x() == 0.0f && movementVect.y() == 0.0f)
 			return;
-		}
-		if (pos.z() > posMax)
-			pos.z(posMax);
+		Vector2 correctedMovement = Vector2Scale(Vector2Normalize(movementVect), distance);
+
+		pos.x(pos.x() + correctedMovement.x());
+		if (pos.x() < posXMin)
+			pos.x(posXMin);
+		else if (pos.x() > posXMax)
+			pos.x(posXMax);
+
+		pos.z(pos.z() + correctedMovement.y());
+		if (pos.z() < posZMin)
+			pos.z(posZMin);
+		else if (pos.z() > posZMax)
+			pos.z(posZMax);
 	}
 
 	public BoundingBox getBoundingBox() {
