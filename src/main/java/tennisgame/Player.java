@@ -50,9 +50,10 @@ public class Player {
 		return bb;
 	}
 
-	public float throwBallAngle() {
-		float angle = (float) Math.atan(pos.z() / (10.0f + pos.x()));
-		return -1.0f * (float) Math.PI + angle;
+	public float throwBallAngle(Vector2 mouseCourtPos) {
+		float dx = mouseCourtPos.x() - pos.x();
+		float dz = mouseCourtPos.y() - pos.z();
+		return (float) Math.atan2(dz, dx);
 	}
 
 	public void draw() {

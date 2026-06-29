@@ -11,7 +11,7 @@ public class Ball {
 	private static float posXMin = -posXMax;
 	private static float posZMax = 10.973f / 2.0f;
 	private static float posZMin = -posZMax;
-	private static float baseSpeed = 10.0f;
+	private static float baseSpeed = 15.0f;
 	private Vector3 speedVect;
 
 	public Ball() {
