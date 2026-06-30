@@ -21,6 +21,14 @@ public class Player {
 		height = 1.8f;
 	}
 
+	public Vector3 getPos() {
+		return pos;
+	}
+
+	public Vector3 getBallPos() {
+		return new Vector3().x(pos.x()).y(1.0f + pos.y()).z(pos.z());
+	}
+
 	public float getBaseSpeed() {
 		return baseSpeed;
 	}
@@ -54,6 +62,10 @@ public class Player {
 		float dx = mouseCourtPos.x() - pos.x();
 		float dz = mouseCourtPos.y() - pos.z();
 		return (float) Math.atan2(dz, dx);
+	}
+
+	public boolean askForService() {
+		return IsKeyDown(KEY_SPACE);
 	}
 
 	public void draw() {

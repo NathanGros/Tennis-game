@@ -34,7 +34,7 @@ public class Game {
 				Vector3Zero(),
 				new Vector3().x(0.0f).y(1.0f).z(0.0f),
 				0.0f,
-				new Vector3().x(23.77f).y(0.0f).z(10.973f),
+	new Vector3().x(23.77f).y(0.0f).z(10.973f),
 				new Color().r((byte) 68).g((byte) 133).b((byte) 227).a((byte) 255));
 		// Net
 		DrawModelEx(
@@ -83,22 +83,38 @@ public class Game {
 		return mouseCourtPos;
 	}
 
+	private void setBallForService(PlayersEnum servingPlayer) {
+		ball.setIsBeingServed(true);
+	}
+
 	private void checkScoring() {
 		Vector3 ballPos = ball.getPos();
 		// Out of court in bot side
 		if (ballPos.x() < 0.0f && (ballPos.x() < -11.885 || (ballPos.z() < -5.4865 || ballPos.z() > 5.4865))) {
-			ball.resetBall();
 			switch (lastHit) {
 				case BOT -> scoresManager.playerWinPoint();
-				default -> scoresManager.playerWinPoint();
+				case PLAYER -> scoresManager.playerWinPoint();
 			}
+			setBallForService(scoresManager.getServingPlayer());
 		}
 		// Out of court in player side
 		if (ballPos.x() > 0.0f && (ballPos.x() > 11.885 || (ballPos.z() < -5.4865 || ballPos.z() > 5.4865))) {
-			ball.resetBall();
 			switch (lastHit) {
 				case BOT -> scoresManager.botWinPoint();
-				default -> scoresManager.botWinPoint();
+				case PLAYER -> scoresManager.botWinPoint();
+			}
+			setBallForService(scoresManager.getServingPlayer());
+		}
+	}
+
+	private void askForService(PlayersEnum servingPlayer) {
+		if (servingPlayer == PlayersEnum.BOT) {
+			if (bot.askForService()) {
+				ball.setIsBeingServed(false);
+			}
+		} else {
+			if (player.askForService()) {
+				ball.setIsBeingServed(false);
 			}
 		}
 	}
@@ -117,7 +133,15 @@ public class Game {
 			}
 			float dt = GetFrameTime();
 			playerMovement(dt);
-			ball.moveBall(dt * ball.getBaseSpeed());
+			if (ball.getIsBeingServed()) {
+				switch (scoresManager.getServingPlayer()) {
+					case PLAYER -> ball.setPos(player.getBallPos());
+					case BOT -> ball.setPos(bot.getBallPos());
+				};
+				askForService(scoresManager.getServingPlayer());
+			} else {
+				ball.moveBall(dt * ball.getBaseSpeed());
+			}
 
 			// Ball collisions
 			if (CheckCollisionBoxes(player.getBoundingBox(), ball.getBoundingBox())) {

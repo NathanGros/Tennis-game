@@ -19,6 +19,9 @@ public class ScoresManager {
 
 	private boolean isTieBreak;
 
+	private PlayersEnum servingPlayer;
+	private boolean isServingDeuce;
+
 	public ScoresManager() {
 		playerGameScore = 0;
 		playerSetScore = 0;
@@ -29,14 +32,39 @@ public class ScoresManager {
 		botMatchScore = 0;
 
 		isTieBreak = false;
+
+		servingPlayer = PlayersEnum.PLAYER;
+		isServingDeuce = true;
+	}
+
+	public PlayersEnum getServingPlayer() {
+		return servingPlayer;
+	}
+
+	public boolean isServingDeuce() {
+		return isServingDeuce;
 	}
 
 	private void triggerTieBreak() {
 		isTieBreak = true;
 	}
 
+	private void switchServer() {
+		servingPlayer = switch (servingPlayer) {
+			case PLAYER -> PlayersEnum.BOT;
+			default -> PlayersEnum.PLAYER;
+		};
+	}
+
 	public void playerWinPoint() {
 		playerGameScore++;
+
+		isServingDeuce = !isServingDeuce;
+		if (isTieBreak) {
+			if ((playerGameScore + botGameScore) % 2 == 1)
+				switchServer();
+		}
+
 		int scoreGoal;
 		if (!isTieBreak)
 			scoreGoal = 4;
@@ -48,6 +76,13 @@ public class ScoresManager {
 
 	public void botWinPoint() {
 		botGameScore++;
+
+		isServingDeuce = !isServingDeuce;
+		if (isTieBreak) {
+			if ((playerGameScore + botGameScore) % 2 == 1)
+				switchServer();
+		}
+
 		int scoreGoal;
 		if (!isTieBreak)
 			scoreGoal = 4;
@@ -58,6 +93,9 @@ public class ScoresManager {
 	}
 
 	private void playerWinGame() {
+		isServingDeuce = true;
+		switchServer();
+
 		isTieBreak = false;
 		playerGameScore = 0;
 		botGameScore = 0;
@@ -67,14 +105,20 @@ public class ScoresManager {
 			return;
 		}
 		if (playerSetScore >= 6) {
-			if (playerSetScore - botSetScore >= 2)
+			if (playerSetScore - botSetScore >= 2) {
 				playerWinSet();
-			if (botSetScore == 6)
+				return;
+			}
+			if (botSetScore == 6) {
 				triggerTieBreak();
+			}
 		}
 	}
 
 	private void botWinGame() {
+		isServingDeuce = true;
+		switchServer();
+
 		isTieBreak = false;
 		playerGameScore = 0;
 		botGameScore = 0;
@@ -84,10 +128,13 @@ public class ScoresManager {
 			return;
 		}
 		if (botSetScore >= 6) {
-			if (botSetScore - playerSetScore >= 2)
+			if (botSetScore - playerSetScore >= 2) {
 				botWinSet();
-			if (playerSetScore == 6)
+				return;
+			}
+			if (playerSetScore == 6) {
 				triggerTieBreak();
+			}
 		}
 	}
 
@@ -178,5 +225,10 @@ public class ScoresManager {
 		DrawText(getPlayerSetScore(), 75, 80, 50, BLACK);
 		DrawText(getBotGameScore(), 135, 20, 50, BLACK);
 		DrawText(getPlayerGameScore(), 135, 80, 50, BLACK);
+
+		DrawRectangle(10, 140, 200, 50, WHITE);
+		DrawRectangle(10, 200, 100, 50, WHITE);
+		DrawText(servingPlayer.toString(), 15, 140, 50, BLACK);
+		DrawText(isServingDeuce ? "D" : "Ad", 15, 200, 50, BLACK);
 	}
 }

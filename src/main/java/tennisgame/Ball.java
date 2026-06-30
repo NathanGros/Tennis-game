@@ -13,15 +13,24 @@ public class Ball {
 	private static float posZMin = -posZMax;
 	private static float baseSpeed = 15.0f;
 	private Vector3 speedVect;
+	private boolean isBeingServed;
 
 	public Ball() {
 		cube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
 		size = 0.2f;
-		resetBall();
+		pos = new Vector3().x(0.0f).y(1.0f).z(0.0f);
+		speedVect = new Vector3().x(1.0f).y(0.0f).z(0.0f);
+		isBeingServed = true;
 	}
 
 	public float getBaseSpeed() {
 		return baseSpeed;
+	}
+
+	public void setPos(Vector3 newPos) {
+		pos.x(newPos.x());
+		pos.y(newPos.y());
+		pos.z(newPos.z());
 	}
 
 	public Vector3 getPos() {
@@ -32,9 +41,12 @@ public class Ball {
 		this.speedVect = speedVect;
 	}
 
-	public void resetBall() {
-		pos = new Vector3().x(0.0f).y(1.0f).z(0.0f);
-		speedVect = new Vector3().x(1.0f).y(0.0f).z(0.0f);
+	public void setIsBeingServed(boolean isBeingServed) {
+		this.isBeingServed = isBeingServed;
+	}
+
+	public boolean getIsBeingServed() {
+		return isBeingServed;
 	}
 
 	public void moveBall(float distance) {

@@ -19,6 +19,14 @@ public class Bot {
 		height = 1.8f;
 	}
 
+	public Vector3 getPos() {
+		return pos;
+	}
+
+	public Vector3 getBallPos() {
+		return new Vector3().x(pos.x()).y(1.0f + pos.y()).z(pos.z());
+	}
+
 	public float getBaseSpeed() {
 		return baseSpeed;
 	}
@@ -42,6 +50,10 @@ public class Bot {
 
 	public float throwBallAngle() {
 		return (float) Math.random() * 0.4f - 0.2f;
+	}
+
+	public boolean askForService() {
+		return true;
 	}
 
 	public void draw() {
