@@ -6,7 +6,6 @@ import static com.raylib.Raylib.*;
 /** Game */
 public class Match {
 	private Camera3D cam;
-	private Model cube;
 	private Color backgroundColor;
 
 	private Player player;
@@ -15,6 +14,13 @@ public class Match {
 	private ScoresManager scoresManager;
 	private PlayersEnum lastHit;
 
+	private Texture netTexture;
+	private Model netModel;
+	private static float netWidth = 12.8016f;
+	private static float netHeight = 0.9144f;
+
+	private Texture courtTexture;
+	private Model courtModel;
 	private static float courtLength = 23.7744f;
 	private static float courtWidth = 10.9728f;
 
@@ -26,26 +32,31 @@ public class Match {
 			.projection(CAMERA_PERSPECTIVE)
 			.up(new Vector3().x(0.0f).y(1.0f).z(0.0f))
 			.fovy(40.0f);
-		cube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
 		backgroundColor = new Color().r((byte) 60).g((byte) 143).b((byte) 146).a((byte) 255);
+
+		netTexture = LoadTexture("src/main/assets/net.png");
+		SetTextureWrap(netTexture, TEXTURE_WRAP_CLAMP);
+		Mesh netMesh = GenMeshPlane(netHeight, netWidth, 1, 1);
+		netModel = LoadModelFromMesh(netMesh);
+		netModel.materials().maps().texture(netTexture);
+
+		courtTexture = LoadTexture("src/main/assets/court.png");
+		SetTextureWrap(courtTexture, TEXTURE_WRAP_CLAMP);
+		Mesh courtMesh = GenMeshPlane(courtLength, courtWidth, 1, 1);
+		courtModel = LoadModelFromMesh(courtMesh);
+		courtModel.materials().maps().texture(courtTexture);
 	}
 
-	private void DrawScene(Model cube) {
+	private void DrawScene() {
 		// Court
-		DrawModelEx(
-				cube,
-				Vector3Zero(),
-				new Vector3().x(0.0f).y(1.0f).z(0.0f),
-				0.0f,
-	new Vector3().x(courtLength).y(0.0f).z(courtWidth),
-				new Color().r((byte) 68).g((byte) 133).b((byte) 227).a((byte) 255));
+		DrawModel(courtModel, Vector3Zero(), 1.0f, WHITE);
 		// Net
 		DrawModelEx(
-				cube,
-				new Vector3().x(0.0f).y(0.5f).z(0.0f),
-				new Vector3().x(0.0f).y(1.0f).z(0.0f),
-				0.0f,
-				new Vector3().x(0.0f).y(1.0f).z(courtWidth),
+				netModel,
+				new Vector3().x(0.0f).y(netHeight/2.f).z(0.0f),
+				new Vector3().x(0.0f).y(0.0f).z(1.0f),
+				-90.0f,
+				Vector3Ones(),
 				WHITE);
 	}
 
@@ -203,9 +214,9 @@ public class Match {
 			BeginDrawing();
 			ClearBackground(backgroundColor);
 			BeginMode3D(cam);
-			DrawScene(cube);
+			DrawScene();
 			player.draw(cam);
-			bot.draw();
+			bot.draw(cam);
 			ball.draw();
 			EndMode3D();
 			scoresManager.draw();
@@ -216,7 +227,10 @@ public class Match {
 		player.unload();
 		bot.unload();
 		ball.unload();
-		UnloadModel(cube);
+		UnloadModel(courtModel);
+		UnloadTexture(courtTexture);
+		UnloadModel(netModel);
+		UnloadTexture(netTexture);
 		CloseWindow();
 	}
 }

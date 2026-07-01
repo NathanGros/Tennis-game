@@ -78,14 +78,14 @@ public class Player {
 		DrawBillboardPro(
 				cam,
 				texture,
-				new Rectangle().x(0).y(0).width(texture.width()).height(texture.height()), // source rect (whole image)
-				Vector3Add(pos, new Vector3().x(0.0f).y(height / 2.0f).z(0.0f)),           // position (same as before)
-				new Vector3().x(0.0f).y(1.0f).z(0.0f),                                     // up vector
-				new Vector2().x(width).y(height),                                          // size on screen
-				new Vector2().x(width / 2.0f).y(height / 2.0f),                            // origin (center it)
-				0.0f,                                                                      // rotation
+				new Rectangle().x(0).y(0).width(texture.width()).height(texture.height()),
+				Vector3Add(pos, new Vector3().x(0.0f).y(height / 2.0f).z(0.0f)),
+				new Vector3().x(0.0f).y(1.0f).z(0.0f),
+				new Vector2().x(width).y(height),
+				new Vector2().x(width / 2.0f).y(height / 2.0f),
+				0.0f,
 				WHITE
-				);
+		);
 	}
 
 	public void unload() {
