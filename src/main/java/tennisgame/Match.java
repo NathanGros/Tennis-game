@@ -4,7 +4,7 @@ import static com.raylib.Colors.*;
 import static com.raylib.Raylib.*;
 
 /** Game */
-public class Game {
+public class Match {
 	private Camera3D cam;
 	private Model cube;
 	private Color backgroundColor;
@@ -15,11 +15,14 @@ public class Game {
 	private ScoresManager scoresManager;
 	private PlayersEnum lastHit;
 
-	public Game() {
+	private static float courtLength = 23.7744f;
+	private static float courtWidth = 10.9728f;
+
+	public Match() {
 		launchWindow();
 		cam = new Camera3D()
-			._position(new Vector3().x(20.0f).y(7.0f).z(0.0f))
-			.target(new Vector3().x(4.0f).y(0.0f).z(0.0f))
+			._position(new Vector3().x(24.0f).y(9.0f).z(0.0f))
+			.target(new Vector3().x(7.0f).y(0.0f).z(0.0f))
 			.projection(CAMERA_PERSPECTIVE)
 			.up(new Vector3().x(0.0f).y(1.0f).z(0.0f))
 			.fovy(40.0f);
@@ -34,7 +37,7 @@ public class Game {
 				Vector3Zero(),
 				new Vector3().x(0.0f).y(1.0f).z(0.0f),
 				0.0f,
-	new Vector3().x(23.77f).y(0.0f).z(10.973f),
+	new Vector3().x(courtLength).y(0.0f).z(courtWidth),
 				new Color().r((byte) 68).g((byte) 133).b((byte) 227).a((byte) 255));
 		// Net
 		DrawModelEx(
@@ -42,7 +45,7 @@ public class Game {
 				new Vector3().x(0.0f).y(0.5f).z(0.0f),
 				new Vector3().x(0.0f).y(1.0f).z(0.0f),
 				0.0f,
-				new Vector3().x(0.0f).y(1.0f).z(10.973f),
+				new Vector3().x(0.0f).y(1.0f).z(courtWidth),
 				WHITE);
 	}
 
@@ -68,6 +71,31 @@ public class Game {
 		if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
 			movement.x(movement.x() + 1.0f);
 		player.move(movement, dt * player.getBaseSpeed());
+		float posXMax = courtLength * 2.f / 3.f;
+		float posXMin = 0.0f;
+		float posZMax = courtWidth * 3.f / 4.f;
+		float posZMin = -posZMax;
+		float playerHalfWidth = player.getWidth() / 2.f;
+		if (ball.getIsBeingServed() && scoresManager.getServingPlayer() == PlayersEnum.PLAYER) {
+			posXMin = courtLength / 2.f;
+			if (scoresManager.isServingDeuce()) {
+				posZMin = -courtWidth/2.f + playerHalfWidth;
+				posZMax = -playerHalfWidth;
+			} else {
+				posZMin = playerHalfWidth;
+				posZMax = courtWidth/2.f - playerHalfWidth;
+			}
+		}
+		Vector3 pos = player.getPos();
+		if (pos.x() < posXMin)
+			pos.x(posXMin);
+		else if (pos.x() > posXMax)
+			pos.x(posXMax);
+
+		if (pos.z() < posZMin)
+			pos.z(posZMin);
+		else if (pos.z() > posZMax)
+			pos.z(posZMax);
 	}
 
 	private Vector2 getMouseCourtPos() {
@@ -90,7 +118,7 @@ public class Game {
 	private void checkScoring() {
 		Vector3 ballPos = ball.getPos();
 		// Out of court in bot side
-		if (ballPos.x() < 0.0f && (ballPos.x() < -11.885 || (ballPos.z() < -5.4865 || ballPos.z() > 5.4865))) {
+		if (ballPos.x() < 0.0f && (ballPos.x() < -courtLength || (ballPos.z() < -courtWidth || ballPos.z() > courtWidth))) {
 			switch (lastHit) {
 				case BOT -> scoresManager.playerWinPoint();
 				case PLAYER -> scoresManager.playerWinPoint();
@@ -98,7 +126,7 @@ public class Game {
 			setBallForService(scoresManager.getServingPlayer());
 		}
 		// Out of court in player side
-		if (ballPos.x() > 0.0f && (ballPos.x() > 11.885 || (ballPos.z() < -5.4865 || ballPos.z() > 5.4865))) {
+		if (ballPos.x() > 0.0f && (ballPos.x() > courtLength || (ballPos.z() < -courtWidth || ballPos.z() > courtWidth))) {
 			switch (lastHit) {
 				case BOT -> scoresManager.botWinPoint();
 				case PLAYER -> scoresManager.botWinPoint();

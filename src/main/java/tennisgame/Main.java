@@ -2,7 +2,7 @@ package tennisgame;
 
 public class Main {
 	public static void main(String[] args) {
-		Game game = new Game();
-			game.startGame();
+		Match match = new Match();
+			match.startGame();
 	}
 }

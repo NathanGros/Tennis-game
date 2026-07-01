@@ -8,10 +8,6 @@ public class Player {
 	private Vector3 pos;
 	private float width;
 	private float height;
-	private static float posXMax = 23.77f / 2.0f;
-	private static float posXMin = 0.0f;
-	private static float posZMax = 10.973f / 2.0f;
-	private static float posZMin = -posZMax;
 	private static float baseSpeed = 3.0f;
 
 	public Player() {
@@ -19,6 +15,10 @@ public class Player {
 		pos = new Vector3().x(10.0f).y(0.0f).z(0.0f);
 		width = 0.7f;
 		height = 1.8f;
+	}
+
+	public float getWidth() {
+		return width;
 	}
 
 	public Vector3 getPos() {
@@ -34,21 +34,9 @@ public class Player {
 	}
 
 	public void move(Vector2 movementVect, float distance) {
-		if (movementVect.x() == 0.0f && movementVect.y() == 0.0f)
-			return;
-		Vector2 correctedMovement = Vector2Scale(Vector2Normalize(movementVect), distance);
-
-		pos.x(pos.x() + correctedMovement.x());
-		if (pos.x() < posXMin)
-			pos.x(posXMin);
-		else if (pos.x() > posXMax)
-			pos.x(posXMax);
-
-		pos.z(pos.z() + correctedMovement.y());
-		if (pos.z() < posZMin)
-			pos.z(posZMin);
-		else if (pos.z() > posZMax)
-			pos.z(posZMax);
+		Vector2 scaledMovement = Vector2Scale(Vector2Normalize(movementVect), distance);
+		pos.x(pos.x() + scaledMovement.x());
+		pos.z(pos.z() + scaledMovement.y());
 	}
 
 	public BoundingBox getBoundingBox() {

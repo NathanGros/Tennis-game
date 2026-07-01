@@ -217,18 +217,17 @@ public class ScoresManager {
 	}
 
 	public void draw() {
-		DrawRectangle(10, 20, 200, 50, WHITE);
-		DrawRectangle(10, 80, 200, 50, WHITE);
-		DrawText(getBotMatchScore(), 15, 20, 50, BLACK);
-		DrawText(getPlayerMatchScore(), 15, 80, 50, BLACK);
-		DrawText(getBotSetScore(), 75, 20, 50, BLACK);
-		DrawText(getPlayerSetScore(), 75, 80, 50, BLACK);
-		DrawText(getBotGameScore(), 135, 20, 50, BLACK);
-		DrawText(getPlayerGameScore(), 135, 80, 50, BLACK);
-
-		DrawRectangle(10, 140, 200, 50, WHITE);
-		DrawRectangle(10, 200, 100, 50, WHITE);
-		DrawText(servingPlayer.toString(), 15, 140, 50, BLACK);
-		DrawText(isServingDeuce ? "D" : "Ad", 15, 200, 50, BLACK);
+		DrawRectangle(10, 20, 250, 50, WHITE);
+		DrawRectangle(10, 80, 250, 50, WHITE);
+		if (servingPlayer == PlayersEnum.BOT)
+			DrawText(">", 15, 20, 50, BLACK);
+		if (servingPlayer == PlayersEnum.PLAYER)
+			DrawText(">", 15, 80, 50, BLACK);
+		DrawText(getBotMatchScore(), 65, 20, 50, BLACK);
+		DrawText(getPlayerMatchScore(), 65, 80, 50, BLACK);
+		DrawText(getBotSetScore(), 125, 20, 50, BLACK);
+		DrawText(getPlayerSetScore(), 125, 80, 50, BLACK);
+		DrawText(getBotGameScore(), 185, 20, 50, BLACK);
+		DrawText(getPlayerGameScore(), 185, 80, 50, BLACK);
 	}
 }
