@@ -204,7 +204,7 @@ public class Match {
 			ClearBackground(backgroundColor);
 			BeginMode3D(cam);
 			DrawScene(cube);
-			player.draw();
+			player.draw(cam);
 			bot.draw();
 			ball.draw();
 			EndMode3D();

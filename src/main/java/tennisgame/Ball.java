@@ -1,10 +1,11 @@
 package tennisgame;
 
 import static com.raylib.Raylib.*;
+import static com.raylib.Colors.WHITE;
 
 /** Ball */
 public class Ball {
-	private Model cube;
+	private Model model;
 	private Vector3 pos;
 	private float size;
 	private static float posXMax = 23.77f / 2.0f;
@@ -16,7 +17,7 @@ public class Ball {
 	private boolean isBeingServed;
 
 	public Ball() {
-		cube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
+		model = LoadModel("src/main/assets/tennis_ball.obj");
 		size = 0.2f;
 		pos = new Vector3().x(0.0f).y(1.0f).z(0.0f);
 		speedVect = new Vector3().x(1.0f).y(0.0f).z(0.0f);
@@ -62,15 +63,16 @@ public class Ball {
 
 	public void draw() {
 		DrawModelEx(
-				cube,
+				model,
 				pos,
 				new Vector3().x(0.0f).y(1.0f).z(0.0f),
 				0.0f,
-				new Vector3().x(size).y(size).z(size),
-				new Color().r((byte) 210).g((byte) 229).b((byte) 54).a((byte) 255));
+				new Vector3().x(1.0f).y(1.0f).z(1.0f),
+				WHITE
+		);
 	}
 
 	public void unload() {
-		UnloadModel(cube);
+		UnloadModel(model);
 	}
 }

@@ -52,7 +52,7 @@ public class ScoresManager {
 	private void switchServer() {
 		servingPlayer = switch (servingPlayer) {
 			case PLAYER -> PlayersEnum.BOT;
-			default -> PlayersEnum.PLAYER;
+			case BOT -> PlayersEnum.PLAYER;
 		};
 	}
 
